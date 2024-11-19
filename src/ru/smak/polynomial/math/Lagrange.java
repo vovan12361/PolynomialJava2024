@@ -1,4 +1,5 @@
 package ru.smak.polynomial.math;
 
-public class Lagrange {
+public class Lagrange extends Polynomial{
+
 }
