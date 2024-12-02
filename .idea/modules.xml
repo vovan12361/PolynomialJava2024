@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/PolynomialJava.iml" filepath="$PROJECT_DIR$/PolynomialJava.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PolynomialJavasmak.iml" filepath="$PROJECT_DIR$/PolynomialJavasmak.iml" />
     </modules>
   </component>
 </project>

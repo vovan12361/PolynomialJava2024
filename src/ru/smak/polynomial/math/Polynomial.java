@@ -6,16 +6,6 @@ import java.util.List;
 public class Polynomial {
     private final ArrayList<Double> coeffs = new ArrayList<>();
 
-    protected void setCoeffs(ArrayList<Double> newCoeffs) {
-        coeffs.clear();
-        coeffs.addAll(newCoeffs);
-        correctCoeffs();
-    }
-
-    public ArrayList<Double> getCoeffs() {
-        return (ArrayList<Double>) coeffs.clone();
-    }
-
     public Polynomial() {
         coeffs.add(0.0);
     }
@@ -27,6 +17,16 @@ public class Polynomial {
 
     public Polynomial(Double... coeffs) {
         this.coeffs.addAll(List.of(coeffs));
+        correctCoeffs();
+    }
+
+    public ArrayList<Double> getCoeffs() {
+        return (ArrayList<Double>) coeffs.clone();
+    }
+
+    protected void setCoeffs(ArrayList<Double> newCoeffs) {
+        coeffs.clear();
+        coeffs.addAll(newCoeffs);
         correctCoeffs();
     }
 
@@ -75,10 +75,10 @@ public class Polynomial {
         return new Polynomial(l);
     }
 
-    public double calc(double x){
+    public double calc(double x) {
         double p = 1;
         double s = coeffs.getFirst();
-        for (int i = 1; i < coeffs.size(); i++){
+        for (int i = 1; i < coeffs.size(); i++) {
             p *= x;
             s += coeffs.get(i) * p;
         }
@@ -99,12 +99,12 @@ public class Polynomial {
         return new Polynomial(c);
     }
 
-    public Polynomial minus(Polynomial other){
+    public Polynomial minus(Polynomial other) {
         return plus(other.times(-1.));
     }
 
-    public Polynomial div(double k){
-        return times(1./k);
+    public Polynomial div(double k) {
+        return times(1. / k);
     }
 
     public Polynomial plus(Polynomial other) {

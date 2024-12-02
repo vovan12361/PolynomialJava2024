@@ -4,7 +4,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class NewtonTest {
 
@@ -83,7 +84,7 @@ class NewtonTest {
         y.add(11.0);
 
         Newton newton = new Newton(x, y);
-        newton.addNode(3,18);
+        newton.addNode(3, 18);
         assertEquals("x^2+2.0x+3.0", newton.toString(), "Polynomial should represent quadratic function");
     }
 

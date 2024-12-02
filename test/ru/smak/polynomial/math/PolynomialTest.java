@@ -67,10 +67,10 @@ class PolynomialTest {
         Polynomial p = new Polynomial(1., 2.);
         Polynomial p1 = new Polynomial(1., 0., 2.);
         //(2x+1)(2x^2+1)= 4x^3+2x+2x^2+1
-        Polynomial tp = new Polynomial(1.,2.,2.,4.);
-        Assertions.assertEquals(tp,p.times(p1));
+        Polynomial tp = new Polynomial(1., 2., 2., 4.);
+        Assertions.assertEquals(tp, p.times(p1));
         Polynomial p2 = new Polynomial();
-        Assertions.assertEquals(new Polynomial(),p.times(p2));
+        Assertions.assertEquals(new Polynomial(), p.times(p2));
 
     }
 }
