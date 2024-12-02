@@ -6,6 +6,12 @@ import java.util.List;
 public class Polynomial {
     private final ArrayList<Double> coeffs = new ArrayList<>();
 
+    protected void setCoeffs(ArrayList<Double> newCoeffs) {
+        coeffs.clear();
+        coeffs.addAll(newCoeffs);
+        correctCoeffs();
+    }
+
     public ArrayList<Double> getCoeffs() {
         return (ArrayList<Double>) coeffs.clone();
     }
