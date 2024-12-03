@@ -18,7 +18,6 @@ public class PerformanceTest {
             y.add(random.nextDouble() * 100);
         }
 
-        // Тестируем полином Лагранжа
         long lagrangeStart = System.currentTimeMillis();
         Lagrange lagrange = new Lagrange(x, y);
         lagrange.calc(500.0);
@@ -26,7 +25,6 @@ public class PerformanceTest {
         long lagrangeTime = lagrangeEnd - lagrangeStart;
         System.out.println("Lagrange time: " + lagrangeTime + " ms");
 
-        // Тестируем полином Ньютона
         long newtonStart = System.currentTimeMillis();
         Newton newton = new Newton(x, y);
         newton.calc(500.0);

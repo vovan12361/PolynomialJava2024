@@ -4,8 +4,19 @@ import java.util.ArrayList;
 
 public class Lagrange extends Polynomial {
 
+    private final ArrayList<Double> xValues; // Разделённые разности
+    private final ArrayList<Double> yValues; // Узловые точки
+
     public Lagrange(ArrayList<Double> x, ArrayList<Double> y) {
         super(calculateLagrange(x, y));
+        this.xValues = x;
+        this.yValues = y;
+    }
+
+    public void addNode(double x, double y) {
+        xValues.add(x);
+        yValues.add(y);
+        calculateLagrange(xValues, yValues);
     }
 
     private static ArrayList<Double> calculateLagrange(ArrayList<Double> x, ArrayList<Double> y) {

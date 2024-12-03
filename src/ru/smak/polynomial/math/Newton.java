@@ -1,24 +1,37 @@
 package ru.smak.polynomial.math;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Newton extends Polynomial {
-    private final ArrayList<Double> coefficients; // Разделённые разности
-    private final ArrayList<Double> nodes; // Узловые точки
+    // Точки в словарь map hashmap
+    /*
+    private final ArrayList<Double> coefficients;
+    private final ArrayList<Double> nodes;
+    */
+    private final HashMap<Double, Double> points;
+    private static Polynomial multiplier;
 
     public Newton(ArrayList<Double> x, ArrayList<Double> y) {
         super(calculateNewton(x, y));
-        this.nodes = x;
-        this.coefficients = calculateDividedDifferences(x, y);
+        this.points = new HashMap<>();
+        for(int i = 0; i < x.size(); i++) {
+            points.put(x.get(i), y.get(i));
+        }
+    }
+
+    public Newton(HashMap<Double, Double> constructPoints) {
+        super(calculateNewton(constructPoints));
+        this.points = constructPoints;
     }
 
     /**
      * Вычисляет разделённые разности.
      *
-     * @param x - список узлов x
-     * @param y - список значений в узлах x
+     * @param x - список узлов (x)
+     * @param y - значения функции в узлах (x)
      */
-    private static ArrayList<Double> calculateDividedDifferences(ArrayList<Double> x, ArrayList<Double> y) {
+    protected static ArrayList<Double> calculateDividedDifferences(ArrayList<Double> x, ArrayList<Double> y) {
         int n = x.size();
         ArrayList<Double> diff = new ArrayList<>(y);
         for (int i = 1; i < n; i++) {
@@ -32,22 +45,42 @@ public class Newton extends Polynomial {
     /**
      * Вычисляет полином Ньютона.
      *
-     * @param x - список узлов (x)
-     * @param y - значения функции в узлах (x)
+     * @param constructPoints - список точек (x, y)
      */
+    private static ArrayList<Double> calculateNewton(HashMap<Double, Double> constructPoints) {
+        ArrayList<Double> x = new ArrayList<>(constructPoints.keySet());
+        ArrayList<Double> y = new ArrayList<>(constructPoints.values());
+        if (x.size() != y.size()) {
+            throw new IllegalArgumentException("Sizes of x and y must be the same.");
+        }
+        ArrayList<Double> dividedDiff = calculateDividedDifferences(x, y);
+        Polynomial result = new Polynomial(0.0);
+        multiplier = new Polynomial(1.0);
+
+        for (int i = 0; i < dividedDiff.size(); i++) {
+            Polynomial term = multiplier.times(dividedDiff.get(i));
+            result = result.plus(term);
+            if (i < x.size() - 1) {
+                multiplier = multiplier.times(new Polynomial(-x.get(i), 1.0));
+            }
+        }
+
+        return result.getCoeffs();
+    }
+
     private static ArrayList<Double> calculateNewton(ArrayList<Double> x, ArrayList<Double> y) {
         if (x.size() != y.size()) {
             throw new IllegalArgumentException("Sizes of x and y must be the same.");
         }
         ArrayList<Double> dividedDiff = calculateDividedDifferences(x, y);
-        Polynomial result = new Polynomial(0.0); // Начальный полином
-        Polynomial multiplier = new Polynomial(1.0); // Множители (x - x0)(x - x1) ...
+        Polynomial result = new Polynomial(0.0);
+        multiplier = new Polynomial(1.0);
 
         for (int i = 0; i < dividedDiff.size(); i++) {
-            Polynomial term = multiplier.times(dividedDiff.get(i)); // a_i * (x - x0)(x - x1)...
+            Polynomial term = multiplier.times(dividedDiff.get(i));
             result = result.plus(term);
             if (i < x.size() - 1) {
-                multiplier = multiplier.times(new Polynomial(-x.get(i), 1.0)); // (x - xi)
+                multiplier = multiplier.times(new Polynomial(-x.get(i), 1.0));
             }
         }
 
@@ -61,46 +94,29 @@ public class Newton extends Polynomial {
      * @param yNew значение функции в новом узле (y).
      */
     public void addNode(double xNew, double yNew) {
-        // Вычисляем новое значение для разделённой разности
-        double prod = 1.0; // Произведение (xNew - x_i) для всех существующих x_i
-        for (double x : nodes) {
+        double prod = 1.0;
+        for (double x : points.keySet()) {
             prod *= (xNew - x);
         }
 
-        // Вычисляем коэффициент для нового узла
         double newCoefficient = (yNew - this.calc(xNew)) / prod;
+        points.put(xNew, yNew);
 
-        // Добавляем новый коэффициент
-        coefficients.add(newCoefficient);
-
-        // Обновляем список узлов
-        nodes.add(xNew);
-
-        // Обновляем полином с учётом нового члена
-        Polynomial updatedPolynomial = new Polynomial(0.0);
-        for (int i = 0; i < coefficients.size(); i++) {
-            Polynomial term = new Polynomial(coefficients.get(i));
-            for (int j = 0; j < i; j++) {
-                term = term.times(new Polynomial(-nodes.get(j), 1.0)); // (x - xj)
-            }
-            updatedPolynomial = updatedPolynomial.plus(term);
+        Polynomial newTerm = new Polynomial(newCoefficient);
+        for(double x: points.keySet()) {
+            if(x != xNew) newTerm = newTerm.times(new Polynomial(-x, 1.0));
         }
-
-        // Обновляем коэффициенты полинома
+        Polynomial updatedPolynomial = new Polynomial(this.getCoeffs());
+        updatedPolynomial = updatedPolynomial.plus(newTerm);
         super.setCoeffs(updatedPolynomial.getCoeffs());
     }
 
     /**
-     * Возвращает коэффициенты (разделённые разности).
+     * Возвращает пары точек в виде словаря (x, y)
      */
-    public ArrayList<Double> getCoefficients() {
-        return new ArrayList<>(coefficients);
+    public HashMap<Double, Double> getPoints() {
+        return points;
     }
 
-    /**
-     * Возвращает узловые точки.
-     */
-    public ArrayList<Double> getNodes() {
-        return new ArrayList<>(nodes);
-    }
+
 }
