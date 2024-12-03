@@ -20,13 +20,13 @@ public class Newton extends Polynomial {
      */
     private static ArrayList<Double> calculateDividedDifferences(ArrayList<Double> x, ArrayList<Double> y) {
         int n = x.size();
-        ArrayList<Double> diff = new ArrayList<>(y); // Копируем значения y
+        ArrayList<Double> diff = new ArrayList<>(y);
         for (int i = 1; i < n; i++) {
             for (int j = n - 1; j >= i; j--) {
                 diff.set(j, (diff.get(j) - diff.get(j - 1)) / (x.get(j) - x.get(j - i)));
             }
         }
-        return diff; // Возвращаем разделённые разности
+        return diff;
     }
 
     /**
